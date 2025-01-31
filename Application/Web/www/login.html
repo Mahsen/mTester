@@ -1,0 +1,64 @@
+<!--
+    File : index.html
+    Programmer : Mohammad Lotfi
+    Used : login
+    Design Pattern : none
+    Types of memory : none
+    Total Tread : Nothing
+    Site : https://www.mahsen.ir
+    Tel : +989124662703
+    Email : info@mahsen.ir
+    Last Update : 2025/1/26
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mRouter Login</title>
+    <script src="3.4.16.js"></script>
+    <style>
+        /* Dark Glassmorphism effect */
+        .glass {
+            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-gray-800 via-gray-900 to-black flex items-center justify-center min-h-screen">
+
+    <!-- Login Form with Dark Glassmorphism effect -->
+    <div class="glass p-8 rounded-3xl shadow-2xl w-full max-w-lg">
+        <h2 class="text-5xl font-semibold text-center text-white mb-4">
+            <span class="text-yellow-400">m</span>Router
+            <hr style="border: 1px solid #facc15; margin-top: -10px; margin-left: 27%; width: 45%; text-align: left;" />
+        </h2>
+        <p class="text-center text-white opacity-80 mb-6">Access your router's control panel and settings.</p>
+
+        <!-- Login Form -->
+        <form id="login-form">
+            <div class="mb-5">
+                <label for="username" class="block text-white text-lg font-medium">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required class="w-full p-4 mt-2 bg-transparent border-2 border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-inner focus:shadow-lg transition duration-300">
+            </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-white text-lg font-medium">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required class="w-full p-4 mt-2 bg-transparent border-2 border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-inner focus:shadow-lg transition duration-300">
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg font-semibold shadow-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:to-blue-700 focus:outline-none transition duration-300 transform hover:scale-105">Login</button>
+        </form>
+
+        <p id="error-message" class="text-red-500 text-center mt-4 hidden">Invalid username or password.</p>
+    </div>
+
+    <!-- Footer with Powered by -->
+    <footer class="absolute bottom-0 w-full py-3 text-center text-gray-600 text-sm">
+        <div class="flex items-center justify-center p-4">Powered by <a href="https://mahsen.ir" class="text-blue-500 hover:underline" target="_blank"><img src="logo.png" alt="Logo" class="w-20 h-20 object-contain" /></a></div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
