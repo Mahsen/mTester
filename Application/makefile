@@ -12,7 +12,9 @@
 # Compiler
 CXX = g++
 # Compiler flags
-CXXFLAGS = -Wall -g -pthread -static
+CXXFLAGS = -Wall -fdiagnostics-color=always -g -pthread -static
+# Library
+LIBRARY = -lsqlite3 -ldl
 # Build dir
 BUILD_DIR = Build
 # Target executable
