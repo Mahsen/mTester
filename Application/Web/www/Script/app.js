@@ -1021,6 +1021,27 @@ function toggleSettings() {
     }
 }
 
+function goFullscreen() {
+    let elem = document.documentElement; // Full screen for the whole page
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Edge
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE/Edge
+        elem.msRequestFullscreen();
+    }
+}
+// Function to toggle between maximum page
+function toggleMaximum() {
+    if(document.getElementById('page-' + 'dashboard').className == 'container') {
+        showPage('dashboard');
+        document.getElementById('page-' + 'dashboard').className = 'container_maxwindow';
+        goFullscreen();
+    } 
+}
+
 // Function to clear all cookie
 function clearAllCookies() {
     var cookies = document.cookie.split("; ");
@@ -1135,15 +1156,30 @@ window.addEventListener('load', function () {
     document.getElementById('toggle-panel-button').addEventListener('click', togglePanel);
 });
 
+window.onresize = evt => {
+    if (!(window.innerHeight === screen.height)) {
+        document.getElementById('page-' + 'dashboard').className = 'container';
+    }
+};
+
 window.onkeydown = evt => {
-    switch (evt.keyCode) {
-        case 113:
+    switch (evt.keyCode) {        
+        case 113: {
             for (var Index = 0; Index <= IPs.length; Index++) {
                 if (Onlines[IPs[Index]]) {
                     Control_OnClick_Play(IPs[Index]);
                 }
             }
             break;
+        }
+        case 122: {
+            toggleMaximum();
+            return true;
+        }
+        case 27: {
+            document.getElementById('page-' + 'dashboard').className = 'container';
+            return true;
+        }
         //Fallback to default browser behaviour
         default:
             return true;
