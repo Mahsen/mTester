@@ -64,8 +64,12 @@ DO::Status DO::Analize(char *Request_Packet, int Request_Length,
   Respond_Data["Command"] = Command;
   Respond_Data["Value"] = "Command_Not_Find";
   if (Command == "TEST") {
-    Value = "123456789";
-    Respond_Data["Value"] = Value;
+    Respond_Data["Value"] = "OK";
+  }
+  if (Command == "GET_DEVICES") {
+    Respond_Data["Value"] = nlohmann::json::array();
+    Respond_Data["Value"].push_back("192.168.7.100");
+    Respond_Data["Value"].push_back("192.168.7.200");
   }
   Respond_Packet = Respond_Data.dump();
   CallBack((char *)Respond_Packet.c_str());

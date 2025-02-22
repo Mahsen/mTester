@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Cloud Software for Automated Testing</title>
-    <link rel="stylesheet" type="text/css" href="Style/app.css?t=1"/>
+    <link rel="stylesheet" type="text/css" href="Style/app.css?t=3"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
@@ -16,6 +16,8 @@
     </div>
     <input type="button" value="TEST" onclick="TEST()" />
     <ul class="menu">
+        <!-- AddModel icon -->
+        <li class="settings-icon"><a href="#" onclick="openModal()"><i class="fas fa-plus"></i></a></li>
         <!-- Maximum icon -->
         <li class="settings-icon"><a href="#" onclick="toggleMaximum()"><i class="fas fa-expand"></i></a></li>
         <!-- Setting icon -->
@@ -48,7 +50,7 @@
         <li><a href="#" onclick="showPage('dashboard')">Dashboard</a></li>
 
     </ul>
-    <div class="add-member"><a href="#" onclick="openModal()"> <i class="fas fa-plus"></i></a></div>
+    <!-- <div class="add-member"><a href="#" onclick="openModal()"> <i class="fas fa-plus"></i></a></div> -->
 </nav>
 
 <!-- Modal -->
@@ -92,11 +94,13 @@
     <br />
     <p>
         List of devices
+        <p id="List_Devices">        
         <!--<%
         GetTester().ForEach(ip => {
             Response.Write("<div>IP : " + ip.ToString() + " <button class='lightred' onclick='Control_OnClick_Delete_Device(\"" + ip.ToString() + "\")'>Delete</button></div>");
         }); 
         %>-->
+        </p>
     </p>
 
 
@@ -139,7 +143,6 @@
           console.error('Error:', error);
         }
     }
-
     function SearchSerial(SerialFocus) {
         var serial_find = "";
         var serial_list_html = document.getElementById('serial-list').innerHTML.split("<");
@@ -164,7 +167,17 @@
             alert(response.Value);
         });
     }
+    function Update_List_Devices() {
+        Execute('', 'GET_DEVICES', '').then(function (response) {
+            document.getElementById("List_Devices").innerHTML = "";
+            response.Value.forEach(function(ip) {
+                document.getElementById("List_Devices").innerHTML += "<div>IP : " + ip + " <button class='lightred' onclick='Control_OnClick_Delete_Device(\"" + ip + "\")'>Delete</button></div>"
+            });
+        });
+    }
+    setTimeout(Update_List_Devices, 2000);
+
 </script>
-<div class="footer" style="background-color: #333; color: #fff; bottom: 0px; position: absolute;"> v1.20250131</div>
+<div id="footer"> v1.20250131</div>
 </body>
 </html>
