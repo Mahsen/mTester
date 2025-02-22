@@ -7,6 +7,8 @@ class DO {
     private:
         using json = nlohmann::json;
     public:
+        json Request_Data;
+        json Respond_Data;
         enum Status {
             Success=0,
             Failed,
@@ -14,4 +16,5 @@ class DO {
         };
         Status Analize(char* Request_Packet, int Request_Length, void(*CallBack)(char* Respond_Packet));
 };
+extern DO Do;
 #endif

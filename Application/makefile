@@ -21,7 +21,8 @@ BUILD_DIR = Build
 TARGET = $(BUILD_DIR)/Application
 # Source files
 SRCS = *.cpp \
-	Module/*.cpp
+	Module/*.cpp \
+	Core/*.cpp
 # Source files www
 SRCS_WWW = Web/www/
 

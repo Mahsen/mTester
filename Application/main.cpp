@@ -44,12 +44,15 @@
 */
 /************************************************** Opjects
  * ***********************************************************/
-DO Do;
+/*
+    Nothing
+*/
 /************************************************** Functions
  * *********************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 // Callback function to process query results
+/*
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
   for (int i = 0; i < argc; i++) {
     Print((char *)azColName[i]);
@@ -59,6 +62,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
   Println((char *)"----------------------");
   return 0;
 }
+*/
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* The main function start of program in cpp language */
 int main() {

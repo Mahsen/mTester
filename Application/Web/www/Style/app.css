@@ -166,8 +166,8 @@ h1 {
 }
 
 .multi-tabs li {
-    margin-right: 10px; /* Adjust margin between tabs */
-    width:200px;
+    margin-right: 3px; /* Adjust margin between tabs */
+    width:220px;
     margin-top: 20px;
 }
 

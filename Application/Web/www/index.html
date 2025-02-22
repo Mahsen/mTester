@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Cloud Software for Automated Testing</title>
-    <link rel="stylesheet" type="text/css" href="Style/app.css?t=3"/>
+    <link rel="stylesheet" type="text/css" href="Style/app.css?t=4"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
@@ -95,11 +95,6 @@
     <p>
         List of devices
         <p id="List_Devices">        
-        <!--<%
-        GetTester().ForEach(ip => {
-            Response.Write("<div>IP : " + ip.ToString() + " <button class='lightred' onclick='Control_OnClick_Delete_Device(\"" + ip.ToString() + "\")'>Delete</button></div>");
-        }); 
-        %>-->
         </p>
     </p>
 
@@ -116,12 +111,6 @@
 
 <script type="text/javascript" src="Script/app.js?t=4"></script>
 <script type="text/javascript">
-    /*<%
-    GetTester().ForEach(ip =>
-    {
-        Response.Write("addNew('" + ip.ToString() + "');");
-    });
-    %>*/
 
     async function AJAXSubmit (oFormElement) {
         var resultElement = oFormElement.elements.namedItem("result");
@@ -170,8 +159,9 @@
     function Update_List_Devices() {
         Execute('', 'GET_DEVICES', '').then(function (response) {
             document.getElementById("List_Devices").innerHTML = "";
-            response.Value.forEach(function(ip) {
-                document.getElementById("List_Devices").innerHTML += "<div>IP : " + ip + " <button class='lightred' onclick='Control_OnClick_Delete_Device(\"" + ip + "\")'>Delete</button></div>"
+            response.Value.forEach(function(ip_port) {
+                document.getElementById("List_Devices").innerHTML += "<div>IP : " + ip_port + " <button class='lightred' onclick='Control_OnClick_Delete_Device(\"" + ip_port + "\")'>Delete</button></div>"
+                addNew(ip_port);
             });
         });
     }

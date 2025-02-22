@@ -78,7 +78,7 @@ function addNew(ipAddress = null) {
 
     // Close the modal if an IP address was provided
     if (ipAddress !== null && document.getElementById('ipInput').value) {
-        Execute(ipAddress, 'AddTester', ipAddress, 10000).catch(function (response) {
+        Execute(ipAddress, 'ADD_DEVICE', ipAddress, 10000).catch(function (response) {
             alert("Add Tester Failed");
         });
         closeModal();
@@ -235,7 +235,7 @@ function Control_OnClick_Save(ipAddress = null) {
 
 // Function On Click Delete device
 function Control_OnClick_Delete_Device(ipAddress = null) {
-    Execute(ipAddress, 'RemoveTester', ipAddress, 10000).then(function (response) {
+    Execute(ipAddress, 'RM_DEVICE', ipAddress, 10000).then(function (response) {
         if (response.Value.indexOf("ERROR") != -1) {
             alert("Remove Tester Failed : " + response.Value);
         }
