@@ -1089,11 +1089,16 @@ function restoreTabsState() {
     }
     */
 }
+function TEST () {
+    Execute('', 'TEST', '', 10000).then(function (response) {
+        alert(response.Value);
+    });
+}
 
 // Function to get and set data of device by the IP address
 function Execute(ipAddress, Command, Value, TimeOut) {
     return new Promise(async function (resolve, reject) {
-        var StructData = {
+        var Data = {
             IP: ipAddress,
             Serial: Serials[ipAddress],
             Command: Command,
@@ -1101,19 +1106,19 @@ function Execute(ipAddress, Command, Value, TimeOut) {
             Online: false,
             TimeOut: TimeOut
         };
-
-        $.ajax({
-            type: "POST",
-            url: "Default.aspx/Execute",
-            data: JSON.stringify({ inputdata: StructData }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                resolve(response.d);
+        fetch('../cgi-bin/Application', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            error: function (xhr, textStatus, errorThrown) {
-                reject(errorThrown);
-            }
+            body: JSON.stringify(Data)
+        })
+        .then(response => response.json())
+        .then(json => {
+            resolve(json);                          
+        })
+        .catch(error => {
+            reject('Error:', error);
         });
     });
 }
