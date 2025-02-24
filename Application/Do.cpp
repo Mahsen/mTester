@@ -46,10 +46,17 @@ DO Do;
 /************************************************** Functions
  * *********************************************************/
 // Callback function to process query results
-static int sqlite3_exe_callback(void *NotUsed, int argc, char **argv,
-                                char **azColName) {
+static int sqlite3_select_testers_callback(void *NotUsed, int argc, char **argv,
+                                           char **azColName) {
   Do.Respond_Data["Value"].push_back(string((char *)argv[1]) + ":" +
                                      string((char *)argv[2]));
+  return 0;
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+// Callback function to process query results
+static int sqlite3_select_devices_callback(void *NotUsed, int argc, char **argv,
+                                           char **azColName) {
+  Do.Respond_Data["Value"].push_back(string((char *)argv[1]));
   return 0;
 }
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -69,7 +76,7 @@ DO::Status DO::Analize(char *Request_Packet, int Request_Length,
   Respond_Data["Value"] = "Command_Not_Find";
   if (Command == "TEST") {
     Respond_Data["Value"] = "OK";
-  } else if (Command == "ADD_DEVICE") {
+  } else if (Command == "ADD_TESTER") {
     sqlite3 *db;
     char *errorMessage = 0;
     /* Split IP:PORT */
@@ -91,7 +98,7 @@ DO::Status DO::Analize(char *Request_Packet, int Request_Length,
                            IP_Port[0] + "');";
     sqlite3_exec(db, sqlInsertData.c_str(), 0, 0, &errorMessage);
     sqlite3_close(db);
-  } else if (Command == "GET_DEVICES") {
+  } else if (Command == "GET_TESTERS") {
     sqlite3 *db;
     char *errorMessage = 0;
     // Open database (creates if not exists)
@@ -99,11 +106,12 @@ DO::Status DO::Analize(char *Request_Packet, int Request_Length,
       status = Status::Failed;
       return status;
     }
-    char *sqlSelectData = "SELECT * FROM Testers;";
+    const char *sqlSelectData = "SELECT * FROM Testers;";
     Respond_Data["Value"] = nlohmann::json::array();
-    sqlite3_exec(db, sqlSelectData, sqlite3_exe_callback, 0, &errorMessage);
+    sqlite3_exec(db, sqlSelectData, sqlite3_select_testers_callback, 0,
+                 &errorMessage);
     sqlite3_close(db);
-  } else if (Command == "RM_DEVICE") {
+  } else if (Command == "RM_TESTER") {
     sqlite3 *db;
     char *errorMessage = 0;
     /* Split IP:PORT */
@@ -119,7 +127,49 @@ DO::Status DO::Analize(char *Request_Packet, int Request_Length,
                         "' AND Port = " + IP_Port[1] + ";";
     sqlite3_exec(db, sqlRMTable.c_str(), 0, 0, &errorMessage);
     sqlite3_close(db);
+  } else if (Command == "UPLOAD_DEVICES") {
+    sqlite3 *db;
+    char *errorMessage = 0;
+    string filename = Request_Data["filename"].get<std::string>();
+    string content = Request_Data["content"].get<std::string>();
+    /* Split Serials */
+    vector<string> Serials = DEFINE_split(content, '\n');
+    // Open database (creates if not exists)
+    if (sqlite3_open("database.db", &db)) {
+      status = Status::Failed;
+      return status;
+    }
+    /* Create Table if not exist */
+    const char *sqlCreateTable = "CREATE TABLE IF NOT EXISTS Devices (ID "
+                                 "INTEGER PRIMARY KEY, Serial TEXT, "
+                                 "Report TEXT);";
+    sqlite3_exec(db, sqlCreateTable, 0, 0, &errorMessage);
+    /* remove record of Table */
+    string sqlRMTable = "DELETE FROM Devices;";
+    sqlite3_exec(db, sqlRMTable.c_str(), 0, 0, &errorMessage);
+    /* Insert to DB */
+    for (string &s : Serials) {
+      string sqlInsertData =
+          "INSERT INTO Devices (Serial, Report) VALUES ('" + s + "', '');";
+      sqlite3_exec(db, sqlInsertData.c_str(), 0, 0, &errorMessage);
+    }
+    sqlite3_close(db);
+    Respond_Data["Value"] = "OK";
+  } else if (Command == "GET_DEVICES") {
+    sqlite3 *db;
+    char *errorMessage = 0;
+    // Open database (creates if not exists)
+    if (sqlite3_open("database.db", &db)) {
+      status = Status::Failed;
+      return status;
+    }
+    const char *sqlSelectData = "SELECT * FROM Devices;";
+    Respond_Data["Value"] = nlohmann::json::array();
+    sqlite3_exec(db, sqlSelectData, sqlite3_select_devices_callback, 0,
+                 &errorMessage);
+    sqlite3_close(db);
   }
+
   Respond_Packet = Respond_Data.dump();
   CallBack((char *)Respond_Packet.c_str());
 

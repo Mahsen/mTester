@@ -78,7 +78,7 @@ function addNew(ipAddress = null) {
 
     // Close the modal if an IP address was provided
     if (ipAddress !== null && document.getElementById('ipInput').value) {
-        Execute(ipAddress, 'ADD_DEVICE', ipAddress, 10000).catch(function (response) {
+        Execute(ipAddress, 'ADD_TESTER', ipAddress, 10000).catch(function (response) {
             alert("Add Tester Failed");
         });
         closeModal();
@@ -234,8 +234,8 @@ function Control_OnClick_Save(ipAddress = null) {
 }
 
 // Function On Click Delete device
-function Control_OnClick_Delete_Device(ipAddress = null) {
-    Execute(ipAddress, 'RM_DEVICE', ipAddress, 10000).then(function (response) {
+function Control_OnClick_Delete_Tester(ipAddress = null) {
+    Execute(ipAddress, 'RM_TESTER', ipAddress, 10000).then(function (response) {
         if (response.Value.indexOf("ERROR") != -1) {
             alert("Remove Tester Failed : " + response.Value);
         }
@@ -1151,6 +1151,50 @@ function selectSerial(Serial) {
     else {            
         alert("Please focus on one device Selected");
     }    
+}
+
+function uploadFile() {
+    let fileInput = document.getElementById("fileInput").files[0];
+    if (!fileInput) { alert("Please select a file!"); return; }
+
+    let reader = new FileReader();
+    //reader.readAsDataURL(fileInput); 
+    reader.readAsText(fileInput);
+
+    reader.onload = function() {
+        //let base64Data = reader.result.split(',')[1]; // Remove "data:text/plain;base64,"
+        let Data = reader.result;
+        let jsonPayload = JSON.stringify({
+            Command: 'UPLOAD_DEVICES',
+            filename: fileInput.name,
+            content: Data
+        });
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/cgi-bin/Application", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.upload.onprogress = function(event) {
+            let percent = Math.round((event.loaded / event.total) * 100);
+            document.getElementById("progressBar").style.width = percent + "%";
+            document.getElementById("progressBar").textContent = percent + "%";
+        };
+
+        xhr.onload = function() {
+            document.getElementById("status").textContent = 
+                (xhr.status == 200) ? "Upload successful!" : "Upload failed!";
+            if(xhr.status == 200) {
+                setTimeout("location.reload();", 2000);
+            }
+        };
+
+        xhr.send(jsonPayload);
+
+    };
+
+    reader.onerror = function() {
+        alert("Error reading file");
+    };
 }
 
 // Restore the state of the tabs when the page loads
